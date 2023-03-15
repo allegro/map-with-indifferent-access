@@ -1,0 +1,67 @@
+name: Test
+
+on:
+  workflow_call:
+  workflow_dispatch:
+  push:
+    branches: ["**"]
+    tags-ignore: ["**"]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        elixir: ["1.13.0"]
+        otp: ["24.2"]
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Setup Elixir
+        uses: erlef/setup-beam@v1
+        with:
+          elixir-version: ${{ matrix.elixir }}
+          otp-version: ${{ matrix.otp }}
+
+      - name: Retrieve Cached Dependencies
+        uses: actions/cache@v2
+        id: mix-cache
+        with:
+          path: |
+            deps
+            _build
+            priv/plts
+          key: ${{ runner.os }}-${{ matrix.otp }}-${{ matrix.elixir }}-${{ hashFiles('mix.lock') }}
+
+      - name: Install Dependencies
+        if: steps.mix-cache.outputs.cache-hit != 'true'
+        run: |
+          mkdir -p priv/plts
+          mix local.rebar --force
+          mix local.hex --force
+          mix deps.get
+          mix deps.compile
+          MIX_ENV=test mix deps.compile
+          mix dialyzer --plt
+
+      - name: Audit dependencies
+        run: mix hex.audit
+
+      - name: Check Formatting
+        run: mix format --check-formatted
+
+      - name: Compile project without warnings
+        run: |
+          mix compile --warnings-as-errors
+          MIX_ENV=test mix compile --warnings-as-errors
+
+      - name: Run Credo
+        run: mix credo
+
+      - name: Run Dialyzer
+        run: mix dialyzer --no-check
+
+      - name: Run tests
+        run: mix test
