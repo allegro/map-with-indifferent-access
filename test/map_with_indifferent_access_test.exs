@@ -25,7 +25,7 @@ defmodule MapWithIndifferentAccessTest do
       assert %{a: 1, b: 2} = MapWithIndifferentAccess.put(%{a: 1}, :b, 2)
     end
 
-    test "if map has string keys, puts the value under an atom key" do
+    test "if map has string keys, puts the value under a string key" do
       assert %{"a" => 1, "b" => 2} = MapWithIndifferentAccess.put(%{"a" => 1}, :b, 2)
     end
   end
