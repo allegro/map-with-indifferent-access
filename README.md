@@ -14,9 +14,50 @@ Nearly all functions mimic `Map` interface, e.g. `MapWithIndifferentAccess.put/3
 
 2. If the map uses string keys, `key` argument will be converted to a string, and only then called with a respective `Map` function.
 
-## Usage example
+## Usage
 
-See [API reference](https://hexdocs.pm/map_with_indifferent_access/MapWithIndifferentAccess.html#module-usage-example).
+1. Add `map_with_indifferent_access` to your list of dependencies in `mix.exs`:
+
+    ```elixir
+    def deps do
+      [
+        {:map_with_indifferent_access, "~> 1.0.0"}
+      ]
+    end
+    ```
+
+2. Whenever you are interacting with a map that can have either string or atom keys, instead of using `Map.*` functions such as `Map.get` or `Map.put`, use `MapWithIndifferentAccess.*` functions (e.g.` MapWithIndifferentAccess.get` `MapWithIndifferentAccess.put`.
+
+    When referring to map keys, specify them as atoms (instead of strings).
+
+    ```elixir
+    MapWithIndifferentAccess.get(%{a: 1}, :a) // # returns 1
+    MapWithIndifferentAccess.get(%{"a" => 1}, :a) // # returns 1
+
+    MapWithIndifferentAccess.put(%{a: 1}, :b, 2) // # returns %{a: 1, b: 2}
+    MapWithIndifferentAccess.put(%{"a" => 1}, :b, 2) // # returns %{"a" => 1, "b" => 2}
+
+    # Real world usage example
+    defmodule ProductController do
+      def create(conn, %{"name" => _name} = params) do
+        params
+        |> MapWithIndifferentAccess.put(:author_id, conn.assigns.current_user.id)
+        |> ProductService.create()
+      end
+    end
+
+    defmodule AdminController do
+      def create_test_product(conn, params) do
+        %{name: "test product"}
+        |> MapWithIndifferentAccess.put(:author_id, conn.assigns.current_user.id)
+        |> ProductService.create()
+      end
+    end
+    ```
+
+## Documentation
+
+See [Hex docs](https://hexdocs.pm/map_with_indifferent_access/MapWithIndifferentAccess.html#summary).
 
 ## Contributing
 
