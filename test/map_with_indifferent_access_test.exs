@@ -11,7 +11,7 @@ defmodule MapWithIndifferentAccessTest do
       refute MapWithIndifferentAccess.uses_string_keys?(%{a: 1})
     end
 
-    test "if map has string keys, returns false" do
+    test "if map has string keys, returns true" do
       assert MapWithIndifferentAccess.uses_string_keys?(%{"a" => 1})
     end
   end
