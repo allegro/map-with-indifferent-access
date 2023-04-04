@@ -1,6 +1,6 @@
 # MapWithIndifferentAccess
 
-[![Build Status](https://github.com/elixir-ecto/ecto/workflows/CI/badge.svg)](https://github.com/allegro/map-with-indifferent-access/actions) [![Hex.pm](https://img.shields.io/hexpm/v/map_with_indifferent_access.svg)](https://hex.pm/packages/map_with_indifferent_access) [![Documentation](https://img.shields.io/badge/documentation-gray)](https://hexdocs.pm/map_with_indifferent_access/)
+![Build Status](https://img.shields.io/github/actions/workflow/status/allegro/map-with-indifferent-access/test.yml) [![Hex.pm](https://img.shields.io/hexpm/v/map_with_indifferent_access.svg)](https://hex.pm/packages/map_with_indifferent_access) [![Documentation](https://img.shields.io/badge/documentation-gray)](https://hexdocs.pm/map_with_indifferent_access/)
 
 Utility functions making it easier to work with maps which can either have atom keys or string keys, but never both.
 
